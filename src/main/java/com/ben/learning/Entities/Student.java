@@ -1,7 +1,7 @@
-package com.ben.learning;
+package com.ben.learning.Entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 @Entity
 @Table
@@ -22,6 +22,22 @@ public class Student {
 
     @Column(nullable = false)
     private int age;
+
+    @OneToOne(
+            // also means this is not the owner of the relationship
+            mappedBy = "student", // The field in the StudentProfile class that maps to this field
+            cascade = CascadeType.ALL // If i delete a student, delete the profile
+    )
+    private StudentProfile studentProfile;
+
+
+    @ManyToOne
+    @JoinColumn(
+            name = "school_id",
+            referencedColumnName = "id"
+    )
+    @JsonBackReference
+    private School school;
 
     public Student() {
 
@@ -72,5 +88,21 @@ public class Student {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public StudentProfile getStudentProfile() {
+        return studentProfile;
+    }
+
+    public void setStudentProfile(StudentProfile studentProfile) {
+        this.studentProfile = studentProfile;
+    }
+
+    public School getSchool() {
+        return school;
+    }
+
+    public void setSchool(School school) {
+        this.school = school;
     }
 }
